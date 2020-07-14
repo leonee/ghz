@@ -93,6 +93,7 @@ type Config struct {
 	Debug             string            `json:"debug,omitempty" toml:"debug,omitempty" yaml:"debug,omitempty"`
 	Host              string            `json:"host" toml:"host" yaml:"host"`
 	EnableCompression bool              `json:"enable-compression,omitempty" toml:"enable-compression,omitempty" yaml:"enable-compression,omitempty"`
+	DryRun            bool              `json:"dry-run" toml:"dry-run" yaml:"dry-run"`
 }
 
 func checkData(data interface{}) error {

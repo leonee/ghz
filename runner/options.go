@@ -69,6 +69,8 @@ type RunConfig struct {
 	name string
 	cpus int
 	tags []byte
+
+	dryRun bool
 }
 
 // Option controls some aspect of run
@@ -697,4 +699,13 @@ func fromConfig(cfg *Config) []Option {
 		options = append(options, WithBinaryDataFromFile(cfg.BinDataPath))
 	}
 	return options
+}
+
+// WithDryRun Only prints call data (JSON).
+func WithDryRun(dryRun bool) Option {
+	return func(o *RunConfig) error {
+		o.dryRun = dryRun
+
+		return nil
+	}
 }

@@ -181,6 +181,9 @@ var (
 	isEnableCompressionSet = false
 	enableCompression      = kingpin.Flag("enable-compression", "Enable Gzip compression on requests.").
 				Short('e').Default("false").IsSetByUser(&isEnableCompressionSet).Bool()
+
+	isDryRunSet = false
+	dryrun      = kingpin.Arg("dry-run", "Only print json data").Default("false").Bool()
 )
 
 func main() {
@@ -244,6 +247,10 @@ func main() {
 		}
 
 		handleError(err)
+	}
+
+	if cfg.DryRun {
+		return
 	}
 
 	output := os.Stdout
@@ -386,6 +393,7 @@ func createConfigFromArgs(cfg *runner.Config) error {
 	cfg.ReflectMetadata = rmdMap
 	cfg.Debug = *debug
 	cfg.EnableCompression = *enableCompression
+	cfg.DryRun = *dryrun
 
 	return nil
 }
@@ -537,6 +545,10 @@ func mergeConfig(dest *runner.Config, src *runner.Config) error {
 
 	if isHostSet {
 		dest.Host = src.Host
+	}
+
+	if isDryRunSet {
+		dest.DryRun = src.DryRun
 	}
 
 	return nil
