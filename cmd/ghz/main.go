@@ -183,7 +183,11 @@ var (
 				Short('e').Default("false").IsSetByUser(&isEnableCompressionSet).Bool()
 
 	isDryRunSet = false
-	dryrun      = kingpin.Arg("dry-run", "Only print json data").Default("false").Bool()
+	dryrun      = kingpin.Flag("dry-run", "Only print json data").Default("false").IsSetByUser(&isDryRunSet).Bool()
+
+	isMaxMsgSizeSet = false
+	maxMsgSize      = kingpin.Flag("max-msg-size", "Request max message size in bytes. Default is 1024*1024*1024").
+			Default("1073741824").Uint()
 )
 
 func main() {
@@ -239,6 +243,10 @@ func main() {
 	if logger != nil {
 		logger.Debugw("Start Run", "config", cfg)
 	}
+
+	//Add dry-run & max-msg-size
+	options = append(options, runner.WithDryRun(cfg.DryRun))
+	options = append(options, runner.WithMaxMsgSize(cfg.MaxMsgSize))
 
 	report, err := runner.Run(cfg.Call, cfg.Host, options...)
 	if err != nil {
@@ -394,6 +402,7 @@ func createConfigFromArgs(cfg *runner.Config) error {
 	cfg.Debug = *debug
 	cfg.EnableCompression = *enableCompression
 	cfg.DryRun = *dryrun
+	cfg.MaxMsgSize = *maxMsgSize
 
 	return nil
 }
@@ -549,6 +558,10 @@ func mergeConfig(dest *runner.Config, src *runner.Config) error {
 
 	if isDryRunSet {
 		dest.DryRun = src.DryRun
+	}
+
+	if isMaxMsgSizeSet {
+		dest.MaxMsgSize = src.MaxMsgSize
 	}
 
 	return nil

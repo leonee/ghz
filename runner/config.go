@@ -94,6 +94,7 @@ type Config struct {
 	Host              string            `json:"host" toml:"host" yaml:"host"`
 	EnableCompression bool              `json:"enable-compression,omitempty" toml:"enable-compression,omitempty" yaml:"enable-compression,omitempty"`
 	DryRun            bool              `json:"dry-run" toml:"dry-run" yaml:"dry-run"`
+	MaxMsgSize        uint              `json:"max-msg-size" toml:"max-msg-size" yaml:"max-msg-size"`
 }
 
 func checkData(data interface{}) error {

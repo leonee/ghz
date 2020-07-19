@@ -70,7 +70,8 @@ type RunConfig struct {
 	cpus int
 	tags []byte
 
-	dryRun bool
+	dryRun     bool
+	maxMsgSize uint
 }
 
 // Option controls some aspect of run
@@ -602,6 +603,25 @@ func WithEnableCompression(enableCompression bool) Option {
 	}
 }
 
+// WithDryRun only print ghz command without sending requests to service
+// WithDryRun Only prints call data (JSON).
+func WithDryRun(dryRun bool) Option {
+	return func(o *RunConfig) error {
+		o.dryRun = dryRun
+
+		return nil
+	}
+}
+
+// WithMaxMsgSize max message size
+func WithMaxMsgSize(maxMsgSize uint) Option {
+	return func(o *RunConfig) error {
+		o.maxMsgSize = maxMsgSize
+
+		return nil
+	}
+}
+
 func createClientTransportCredentials(skipVerify bool, cacertFile, clientCertFile, clientKeyFile, cname string) (credentials.TransportCredentials, error) {
 	var tlsConf tls.Config
 
@@ -699,13 +719,4 @@ func fromConfig(cfg *Config) []Option {
 		options = append(options, WithBinaryDataFromFile(cfg.BinDataPath))
 	}
 	return options
-}
-
-// WithDryRun Only prints call data (JSON).
-func WithDryRun(dryRun bool) Option {
-	return func(o *RunConfig) error {
-		o.dryRun = dryRun
-
-		return nil
-	}
 }
